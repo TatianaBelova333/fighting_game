@@ -5,16 +5,16 @@
     <title>Sky Wars</title>
     <meta charset="UTF-8">
   </head>
-  <body>
+  <body style="background-color:#c8efe7";>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <main style ="width: 320px; margin: 0 auto;">
       <div class="container">
         <h2>{{ result.header }}</h2>
-      <form action="", method="post">
+      <form action="" method="post">
         <div class="form-group">
-            <input type="text", name="name" class="form-control" placeholder="Имя героя">
+            <input type="text" name="name" class="form-control" placeholder="Имя героя" required>
           <hr>
           <select class="custom-select" name="unit_class" required>
              <option value="">Выберите класс</option>
@@ -25,15 +25,15 @@
           <hr>
             <select class="custom-select" name="weapon" required>
              <option value="">Выберите оружие</option>
-              {% for weapon_name in result.weapons %}
-                  <option value="{{ weapon_name }}">{{ weapon_name }}</option>
+              {% for weapon in result.weapons %}
+                  <option value="{{ weapon.name }}">{{ weapon.name }}</option>
               {% endfor %}
            </select>
           <hr>
           <select class="custom-select" name="armor" required>
              <option value="">Выберите броню</option>
-              {% for armor_name in result.armors %}
-                  <option value="{{ armor_name }}">{{ armor_name }}</option>
+              {% for armor in result.armors %}
+                  <option value="{{ armor.name }}">{{ armor.name }}</option>
               {% endfor %}
            </select>
           <hr>
