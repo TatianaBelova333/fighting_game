@@ -1,9 +1,9 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from players import BaseUnit
+    from app.players import BaseUnit
 
 
 class Skill(ABC):
@@ -26,9 +26,11 @@ class Skill(ABC):
     def damage(self):
         pass
 
-    def _is_stamina_enough(self) -> bool:
+    def _is_stamina_enough(self) -> Optional[bool]:
         """Checks player's stamina points for using skill"""
-        return self.user.stamina >= self.stamina_per_use
+        if self.user is not None:
+            return self.user.stamina >= self.stamina_per_use
+        return None
 
     def use(self, user: BaseUnit, target: BaseUnit) -> str:
         """returns the result of skill used by BaseUnit class"""

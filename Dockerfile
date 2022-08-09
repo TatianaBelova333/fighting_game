@@ -3,7 +3,7 @@ FROM python:3.10-slim
 WORKDIR /code
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-COPY app.py .
+COPY run.py .
 COPY app app
 COPY data data
 COPY templates templates

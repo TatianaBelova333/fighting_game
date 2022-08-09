@@ -43,12 +43,14 @@ class Equipment:
         for weapon in self.get_weapons_names():
             if weapon.name == weapon_name:
                 return weapon
+        return None
 
     def get_armor(self, armor_name: str) -> Optional[Armor]:
         """Returns Armor class instance by armor name"""
         for armor in self.get_armors_names():
             if armor.name == armor_name:
                 return armor
+        return None
 
     def get_weapons_names(self) -> List[Weapon]:
         """Returns list of Weapon class instances"""

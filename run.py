@@ -1,3 +1,5 @@
+from typing import Type
+
 from flask import Flask, render_template, request, redirect, url_for
 
 from app.base import Arena
@@ -41,10 +43,12 @@ def choose_hero():
         weapon_name = request.values.get('weapon')
         armor_name = request.values.get('armor')
 
-        heroes['player'] = heroes['player'](name=name, unit_class=unit_classes[unit_class])
-        heroes['player'].equip_weapon(Equipment().get_weapon(weapon_name=weapon_name))
-        heroes['player'].equip_armor(Equipment().get_armor(armor_name=armor_name))
-
+        heroes['player'] = heroes['player'](
+            name=name,
+            unit_class=unit_classes[unit_class],
+            weapon=Equipment().get_weapon(weapon_name=weapon_name),
+            armor=Equipment().get_armor(armor_name=armor_name),
+        )
         return redirect(url_for("choose_enemy"))
 
 
@@ -66,9 +70,12 @@ def choose_enemy():
         weapon_name = request.values.get('weapon')
         armor_name = request.values.get('armor')
 
-        heroes['enemy'] = heroes.get('enemy')(name, unit_classes.get(unit_class))
-        heroes['enemy'].equip_weapon(Equipment().get_weapon(weapon_name=weapon_name))
-        heroes['enemy'].equip_armor(Equipment().get_armor(armor_name=armor_name))
+        heroes['enemy'] = heroes.get('enemy')(
+            name=name,
+            unit_class=unit_classes[unit_class],
+            weapon=Equipment().get_weapon(weapon_name=weapon_name),
+            armor=Equipment().get_armor(armor_name=armor_name),
+            )
         return redirect(url_for("start_fight"))
 
 

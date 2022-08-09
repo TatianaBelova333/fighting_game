@@ -8,14 +8,14 @@ from typing import Optional
 
 class BaseUnit(ABC):
     """Base UnitClass"""
-    def __init__(self, name: str, unit_class: UnitClass):
+    def __init__(self, name: str, unit_class: UnitClass, weapon: Weapon, armor: Armor) -> None:
         """UnitClass is used for initializing Unit"""
         self.name = name
         self.unit_class = unit_class
         self.hp = unit_class.max_health
         self.stamina = unit_class.max_stamina
-        self.weapon = None
-        self.armor = None
+        self.weapon = weapon
+        self.armor = armor
         self._is_skill_used = False
 
     @property
@@ -28,21 +28,11 @@ class BaseUnit(ABC):
         """Returns players' remaining stamina points rounded off to 1 digit"""
         return round(self.stamina, 1)
 
-    def equip_weapon(self, weapon: Weapon) -> str:
-        """Returns a list of available weapons"""
-        self.weapon = weapon
-        return f"{self.name} экипирован оружием {self.weapon.name}"
-
-    def equip_armor(self, armor: Armor) -> str:
-        """Returns a list of available armors"""
-        self.armor = armor
-        return f"{self.name} экипирован броней {self.armor.name}"
-
     def is_enough_stamina_per_hit(self) -> bool:
         """Checks if player has enough stamina points to hit"""
         return self.stamina >= self.weapon.stamina_per_hit
 
-    def is_enough_stamina_per_turn(self):
+    def is_enough_stamina_per_turn(self) -> bool:
         """Checks if player has enough stamina points to use armor"""
         return self.stamina >= self.armor.stamina_per_turn
 
@@ -67,7 +57,7 @@ class BaseUnit(ABC):
         return self.health_points
 
     @abstractmethod
-    def hit(self, target: BaseUnit) -> str:
+    def hit(self, target: BaseUnit) -> Optional[str]:
         pass
 
     def use_skill(self, target: BaseUnit) -> Optional[str]:
@@ -75,6 +65,7 @@ class BaseUnit(ABC):
         if not self._is_skill_used:
             self._is_skill_used = True
             return self.unit_class.skill.use(user=self, target=target)
+        return None
 
 
 class PlayerUnit(BaseUnit):
@@ -83,8 +74,9 @@ class PlayerUnit(BaseUnit):
     def hit(self, target: BaseUnit) -> str:
         """Returns the result of player's hit"""
         if not self.is_enough_stamina_per_hit():
-            return f"Ваш герой {self.name.upper()} попытался использовать {self.weapon.name.upper()}, но у него не хватило выносливости.<br>"
-        if self.is_enough_stamina_per_hit():
+            return f"Ваш герой {self.name.upper()} попытался использовать {self.weapon.name.upper()}, но у него не " \
+                   f"хватило выносливости.<br> "
+        else:
             damage = self._count_damage(target)
             if damage:
                 return f"Ваш герой {self.name.upper()}, используя {self.weapon.name.upper()}, " \
@@ -97,23 +89,22 @@ class PlayerUnit(BaseUnit):
 class EnemyUnit(BaseUnit):
     """Computer PLayer Class"""
 
-    def hit(self, target: BaseUnit) -> str:
+    def hit(self, target: BaseUnit) -> Optional[str]:
         """Returns the result of computer's hit. Computer player has a 10% chance of using skill (once)"""
         if not self.is_enough_stamina_per_hit():
             return f"Соперник {self.name.upper()} попытался использовать {self.weapon.name.upper()}, но у него не хватило " \
                    f"выносливости.  "
-        if self.is_enough_stamina_per_hit():
+        else:
             if not self._is_skill_used:
-                try:
-                    # 10% chance of using self.use_skill()
-                    res = [self.use_skill(target=target)][randint(0, 9)]
+                # one-in-ten chance to use skill
+                one_in_ten_chance = randint(0, 9)
+                if one_in_ten_chance == 0:
+                    res = self.use_skill(target=target)
                     return res
-                except IndexError:
-                    pass
             damage = self._count_damage(target)
             if damage:
                 return f"Соперник {self.name.upper()}, используя {self.weapon.name.upper()} " \
                        f"пробивает Вашу защиту {target.armor.name.upper()}  и наносит {damage} урона.  "
             else:
                 return f"Соперник {self.name.upper()}, используя {self.weapon.name.upper()}, наносит удар, " \
-                       f"но Ваша защита {target.armor.name.upper()} его останавливает.  "
+                       f"но Ваша защита {target.armor.name.upper()} его останавливает."
