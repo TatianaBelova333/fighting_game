@@ -8,7 +8,11 @@ from typing import Optional
 
 class BaseUnit(ABC):
     """Base UnitClass"""
-    def __init__(self, name: str, unit_class: UnitClass, weapon: Weapon, armor: Armor) -> None:
+    def __init__(
+            self, name: str,
+            unit_class: UnitClass,
+            weapon: Weapon, armor: Armor,
+    ) -> None:
         """UnitClass is used for initializing Unit"""
         self.name = name
         self.unit_class = unit_class
@@ -52,7 +56,11 @@ class BaseUnit(ABC):
         return 0
 
     def get_damage(self, damage: int) -> float:
-        """Adjust player's health points according to calculated damage (self._count_damage())"""
+        """
+        Adjust player's health points according to calculated damage
+        (self._count_damage()).
+
+        """
         self.hp -= damage
         return self.health_points
 
@@ -61,7 +69,10 @@ class BaseUnit(ABC):
         pass
 
     def use_skill(self, target: BaseUnit) -> Optional[str]:
-        """Returns player's skill effect if skill is not used (can only be used once)"""
+        """
+        Returns player's skill effect if skill is not used
+        (can only be used once).
+        """
         if not self._is_skill_used:
             self._is_skill_used = True
             return self.unit_class.skill.use(user=self, target=target)
@@ -74,26 +85,35 @@ class PlayerUnit(BaseUnit):
     def hit(self, target: BaseUnit) -> str:
         """Returns the result of player's hit"""
         if not self.is_enough_stamina_per_hit():
-            return f"Ваш герой {self.name.upper()} попытался использовать {self.weapon.name.upper()}, но у него не " \
-                   f"хватило выносливости.<br> "
+            return (f"Ваш герой {self.name.upper()} попытался использовать "
+                    f"{self.weapon.name.upper()}, но у него не "
+                    f"хватило выносливости.<br> ")
         else:
             damage = self._count_damage(target)
             if damage:
-                return f"Ваш герой {self.name.upper()}, используя {self.weapon.name.upper()}, " \
-                       f"пробивает защиту {target.armor.name.upper()} соперника и наносит {damage} урона.<br>"
+                return (f"Ваш герой {self.name.upper()}, используя "
+                        f"{self.weapon.name.upper()}, "
+                        f"пробивает защиту {target.armor.name.upper()} "
+                        f"соперника  и наносит {damage} урона.<br>")
             else:
-                return f"Ваш герой {self.name.upper()}, используя {self.weapon.name.upper()}, наносит удар, " \
-                       f"но защита {target.armor.name.upper()} cоперника его останавливает.<br>"
+                return (f"Ваш герой {self.name.upper()}, используя "
+                        f"{self.weapon.name.upper()}, наносит удар, "
+                        f"но защита {target.armor.name.upper()} "
+                        f"cоперника его останавливает.<br>")
 
 
 class EnemyUnit(BaseUnit):
-    """Computer PLayer Class"""
+    """Computer PLayer Class."""
 
     def hit(self, target: BaseUnit) -> Optional[str]:
-        """Returns the result of computer's hit. Computer player has a 10% chance of using skill (once)"""
+        """
+        Returns the result of computer's hit.
+        Computer player has a 10% chance of using skill (once).
+        """
         if not self.is_enough_stamina_per_hit():
-            return f"Соперник {self.name.upper()} попытался использовать {self.weapon.name.upper()}, но у него не хватило " \
-                   f"выносливости.  "
+            return (f"Соперник {self.name.upper()} попытался использовать "
+                    f"{self.weapon.name.upper()}, но у него не хватило "
+                    f"выносливости.  ")
         else:
             if not self._is_skill_used:
                 # one-in-ten chance to use skill
@@ -103,8 +123,12 @@ class EnemyUnit(BaseUnit):
                     return res
             damage = self._count_damage(target)
             if damage:
-                return f"Соперник {self.name.upper()}, используя {self.weapon.name.upper()} " \
-                       f"пробивает Вашу защиту {target.armor.name.upper()}  и наносит {damage} урона.  "
+                return (f"Соперник {self.name.upper()}, используя "
+                        f"{self.weapon.name.upper()} пробивает Вашу защиту "
+                        f"{target.armor.name.upper()}  и "
+                        f"наносит {damage} урона.  ")
             else:
-                return f"Соперник {self.name.upper()}, используя {self.weapon.name.upper()}, наносит удар, " \
-                       f"но Ваша защита {target.armor.name.upper()} его останавливает."
+                return (f"Соперник {self.name.upper()}, используя "
+                        f"{self.weapon.name.upper()}, наносит удар, "
+                        f"но Ваша защита {target.armor.name.upper()} "
+                        f"его останавливает.")

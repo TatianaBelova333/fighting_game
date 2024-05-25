@@ -31,24 +31,26 @@ class Arena(metaclass=BaseSingleton):
     def _check_players_hp(self) -> Optional[str]:
         """Checks players' health points and returns the result of the game"""
         if self.player is not None and self.enemy is not None:
-            if self.player.health_points <= 0 and self.enemy.health_points <= 0:
+            if (self.player.health_points <= 0 and
+                    self.enemy.health_points <= 0):
                 self.battle_result = 'Ничья.'
             elif self.player.health_points <= 0:
-                self.battle_result = f'Вы проиграли:('
+                self.battle_result = 'Вы проиграли:('
             elif self.enemy.health_points <= 0:
-                self.battle_result = f'Вы выиграли!'
+                self.battle_result = 'Вы выиграли!'
         return self.battle_result
 
     def _stamina_regeneration(self) -> None:
         """Recovers players' stamina after each game round"""
         if self.player is not None and self.enemy is not None:
-            self.player.stamina += self.STAMINA_PER_ROUND * self.player.unit_class.stamina_mod
-            self.enemy.stamina += self.STAMINA_PER_ROUND * self.enemy.unit_class.stamina_mod
+            self.player.stamina += (self.STAMINA_PER_ROUND *
+                                    self.player.unit_class.stamina_mod)
+            self.enemy.stamina += (self.STAMINA_PER_ROUND *
+                                   self.enemy.unit_class.stamina_mod)
             if self.player.stamina > self.player.unit_class.max_stamina:
                 self.player.stamina = self.player.unit_class.max_stamina
             if self.enemy.stamina > self.enemy.unit_class.max_stamina:
                 self.enemy.stamina = self.enemy.unit_class.max_stamina
-
 
     def next_turn(self):
         """Returns the result of computer player's move"""
@@ -88,4 +90,3 @@ class Arena(metaclass=BaseSingleton):
                 self._end_game()
             return res
         return None
-

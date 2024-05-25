@@ -39,10 +39,12 @@ class Skill(ABC):
         if self._is_stamina_enough():
             self.target.hp -= self.damage
             self.user.stamina -= self.stamina_per_use
-            return f'{self.user.name.upper()} использует {self.name.upper()} и наносит {self.damage} очков урона ' \
-                   f'сопернику {self.target.name.upper()}.<br>'
-        return f"{self.user.name.upper()} попытался использовать {self.name.upper()}, но у него не хватило " \
-               f"выносливости.<br>"
+            return (f"{self.user.name.upper()} использует {self.name.upper()} "
+                    f"и наносит {self.damage} очков урона "
+                    f"сопернику {self.target.name.upper()}.<br>")
+        return (f"{self.user.name.upper()} попытался использовать "
+                f"{self.name.upper()},но у него не хватило "
+                f"выносливости.<br>")
 
 
 class FuryPunch(Skill):
@@ -55,4 +57,3 @@ class HardShot(Skill):
     name = "Мощный укол"
     stamina_per_use = 5
     damage = 12
-

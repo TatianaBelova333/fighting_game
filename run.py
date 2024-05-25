@@ -1,5 +1,3 @@
-from typing import Type
-
 from flask import Flask, render_template, request, redirect, url_for
 
 from app.base import Arena
@@ -82,37 +80,51 @@ def choose_enemy():
 @app.route("/fight/")
 def start_fight():
     arena.start_game(player=heroes['player'], enemy=heroes['enemy'])
-    return render_template('fight.html', heroes=heroes, battle_result='Бой начался!')
+    return render_template(
+        'fight.html', heroes=heroes, battle_result='Бой начался!'
+    )
 
 
 @app.route("/fight/hit")
 def hit():
     if arena.battle_result != 'Ваш ход!':
         arena.battle_result = None
-        return render_template('fight.html', heroes=heroes, battle_result='Игра окончена.')
+        return render_template(
+            'fight.html', heroes=heroes, battle_result='Игра окончена.'
+        )
     result = arena.player_hit()
     battle_result = arena.battle_result
-    return render_template('fight.html', heroes=heroes, result=result, battle_result=battle_result)
+    return render_template(
+        'fight.html', heroes=heroes, result=result, battle_result=battle_result
+    )
 
 
 @app.route("/fight/use-skill")
 def use_skill():
     if arena.battle_result != 'Ваш ход!':
         arena.battle_result = None
-        return render_template('fight.html', heroes=heroes, battle_result='Игра окончена.')
+        return render_template(
+            'fight.html', heroes=heroes, battle_result='Игра окончена.'
+        )
     result = arena.player_use_skill()
     battle_result = arena.battle_result
-    return render_template('fight.html', heroes=heroes, result=result, battle_result=battle_result)
+    return render_template(
+        'fight.html', heroes=heroes, result=result, battle_result=battle_result
+    )
 
 
 @app.route("/fight/pass-turn")
 def pass_turn():
     if arena.battle_result != 'Ваш ход!':
         arena.battle_result = None
-        return render_template('fight.html', heroes=heroes, battle_result='Игра окончена.')
+        return render_template(
+            'fight.html', heroes=heroes, battle_result='Игра окончена.'
+        )
     result = arena.next_turn()
     battle_result = arena.battle_result
-    return render_template('fight.html', heroes=heroes, result=result, battle_result=battle_result)
+    return render_template(
+        'fight.html', heroes=heroes, result=result, battle_result=battle_result
+    )
 
 
 @app.route("/fight/end-fight")

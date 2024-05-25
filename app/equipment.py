@@ -55,13 +55,19 @@ class Equipment:
     def get_weapons_names(self) -> List[Weapon]:
         """Returns list of Weapon class instances"""
         weapons_schema = marshmallow_dataclass.class_schema(Weapon)
-        weapons = list(map(lambda weapon: weapons_schema().load(weapon), self.equipment.weapons))
+        weapons = list(map(
+            lambda weapon: weapons_schema().load(weapon),
+            self.equipment.weapons
+        ))
         return weapons
 
     def get_armors_names(self) -> List[Armor]:
         """Returns list of Armor class instances"""
         armor_schema = marshmallow_dataclass.class_schema(Armor)
-        armors = list(map(lambda armor: armor_schema().load(armor), self.equipment.armors))
+        armors = list(map(
+            lambda armor: armor_schema().load(armor),
+            self.equipment.armors
+        ))
         return armors
 
     @staticmethod
@@ -70,7 +76,10 @@ class Equipment:
         try:
             with open("./data/equipment.json", 'r', encoding='utf-8') as file:
                 data = json.load(file)
-                equipment_schema = marshmallow_dataclass.class_schema(EquipmentData)
+                equipment_schema = marshmallow_dataclass.class_schema(
+                    EquipmentData
+                )
                 return equipment_schema().load(data)
-        except (FileNotFoundError, json.JSONDecodeError, marshmallow.exceptions.ValidationError):
+        except (FileNotFoundError, json.JSONDecodeError,
+                marshmallow.exceptions.ValidationError):
             raise
