@@ -3,7 +3,7 @@
 ## Description
 
 A simple fighting game between a user and the computer.
-![Fight](./Экран битвы.png)
+![Fight](fighting_example.png)
 
 ## Technologies
 * Flask==2.0.2
